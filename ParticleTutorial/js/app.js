@@ -57,7 +57,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                 g.ellipseMode(g.CENTER_RADIUS);
 
                 // Start with a black background
-                g.background(0);
+                //g.background(0);
 
                 // You can specify backgrounds with one value, for greyscale,
                 //  g.background(.65);
@@ -70,26 +70,15 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 
                 // Set processing's draw function
                 g.draw = function() {
-                    g.fill(0, 0, 0, .04);
-                    g.rect(0, 0, w, h);
 
+                    // Update time
                     time.updateTime();
-                    particleSystem.update(time);
-
-                    for (var i = 0; i < 1; i++) {
-                        g.noStroke();
-                        var x = Math.random() * w;
-                        var y = Math.random() * h;
-
-                        g.fill(Math.random(), 0, 1, 1);
-                        g.ellipse(x, y, 1, 1);
-                    }
 
                     // Move to the center of the canvas
                     g.pushMatrix();
                     g.translate(w / 2, h / 2);
 
-                    particleSystem.draw(g);
+                    // Draw some stuff here
 
                     g.popMatrix();
                 };
