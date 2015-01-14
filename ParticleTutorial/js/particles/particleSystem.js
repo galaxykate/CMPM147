@@ -3,7 +3,7 @@ define(["inheritance", "common"], function(_inheritance, common) {'use strict';
     var ParticleSystem = Class.extend({
         init : function() {
             this.particles = [];
-         
+
         },
 
         add : function(particle) {
@@ -14,8 +14,7 @@ define(["inheritance", "common"], function(_inheritance, common) {'use strict';
         update : function(time) {
             for (var i = 0; i < this.particles.length; i++) {
                 var p = this.particles[i];
-                p.setForces(time);
-                p.move(time);
+                p.update(time);
             }
         },
 

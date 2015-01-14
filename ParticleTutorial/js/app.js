@@ -20,6 +20,32 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         }
     };
 
+    function randomDot(g) {
+        var x = Math.floor(Math.random() * g.width);
+        var y = Math.floor(Math.random() * g.height);
+        g.fill(Math.random(), 1, 1, .4);
+        g.noStroke();
+        g.ellipse(x, y, 100, 100);
+    }
+
+    function pixelStreak(g) {
+        var offset = Math.floor(Math.random() * 100);
+        g.loadPixels();
+        var pixelArray = g.pixels.toArray();
+
+        var x = Math.floor(Math.random() * g.width);
+        var y = Math.floor(Math.random() * g.height);
+
+        // Move a bunch of pixels to the right by 30 (wraparound)
+        for (var i = 0; i < 1000; i++) {
+            var index = x + y * g.width + i;
+            pixelArray[index] = pixelArray[index + offset];
+        }
+
+        g.pixels.set(pixelArray);
+        g.updatePixels();
+    }
+
     // Lets add some functions to the app object!
     $.extend(app, {
 
@@ -27,6 +53,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         dimensions : new Vector(),
 
         init : function() {
+            console.log("Hello, World.");
 
             // Make a particle system (for later in the tutorial)
             var particleSystem = new ParticleSystem();
@@ -40,6 +67,7 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
             // myJQuerySelector.get(0) will return the canvas element to pass to processing
             var canvas = $("#processingCanvas");
             var processingInstance = new Processing(canvas.get(0), function(g) {
+
                 // This function is called once processing is initialized.
 
                 // Set the size of processing so that it matches that size of the canvas element
@@ -57,30 +85,53 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                 g.ellipseMode(g.CENTER_RADIUS);
 
                 // Start with a black background
-                //g.background(0);
+                // g.background(.5);
 
                 // You can specify backgrounds with one value, for greyscale,
                 //  g.background(.65);
 
                 // or with 3 for HSB (or whatever color mode you are using)
-                // g.background(.65, 1, .3);
 
                 // You can even have a background that is *transparent*
                 // g.background(0, 0, 0, 0);
 
                 // Set processing's draw function
+
+                g.background(.14, .4, .9);
+
+                // [TODO] Create a particle here
+
+                for (var i = 0; i < 50; i++) {
+                    randomDot(g);
+                }
                 g.draw = function() {
 
                     // Update time
                     time.updateTime();
 
+                    // [TODO] Update a particle here
+
+                    g.fill(.5, .2, .1, .01);
+                    //   g.rect(0, 0, w, h);
+
                     // Move to the center of the canvas
                     g.pushMatrix();
                     g.translate(w / 2, h / 2);
 
-                    // Draw some stuff here
+                    // [TODO] Draw a particle here
 
                     g.popMatrix();
+
+                    // HW Functions
+                    /*
+                     if (app.key === 1) {
+                     randomDot(g);
+                     }
+                     if (app.key === 2) {
+                     pixelStreak(g);
+                     }
+                     */
+
                 };
             });
             this.initUI();
@@ -121,18 +172,26 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                         app.paused = !app.paused;
                         break;
                     case '1':
-                        // Do something
+                        // Do something when the user
+                        app.key = 1;
                         break;
 
                     case '2':
                         // Do something
+                        app.key = 2;
                         break;
                     case '3':
+                        app.key = 3;
                         // Do something
                         break;
                 }
 
             });
+
+            $(document).keyup(function(e) {
+                app.key = undefined;
+            });
+
         }
     });
 
