@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<link rel="stylesheet" href="css/layout.css">
+		<title>Particles</title>
+
+	</head>
+	<body>
+		<div id="app">
+			<div id="column">
+				<div id="view">
+					<canvas id="canvas" width="160" height="120"></canvas>
+					<canvas id="processingCanvas"></canvas>
+				</div>
+			</div>
+		</div>
+
+		<script src="js/vendor/jquery-1.11.1.min.js"></script>
+		<script src="js/vendor/jquery.mousewheel.js"></script>
+		<script src="js/vendor/jquery-ui.js"></script>
+		<script src='http://cdn.zigfu.com/zigjs/zig.min.js'></script>
+		<script src='js/zigfu/zigfuUtils.js'></script>
+
+		<script>
+            function drawDM(plugin, canvas) {
+
+                var dm = plugin.depthMap;
+                if (dm.length == 0)
+                    return;
+                var ctx = canvas.getContext('2d');
+                var pix = ctx.createImageData(160, 120);
+                var data = pix.data;
+                var srcData = Base64.decode(dm);
+                var width = 160;
+                var height = 120;
+                app.g.noStroke();
+                for (var i = 0; i < width; i++) {
+                    for (var j = 0; j < height; j++) {
+
+                        if (Math.random() > .9) {
+                            var index = (i + j * width) * 2;
+                            var val = srcData[index + 1];
+                            var val0 = srcData[index];
+                            var v = val + val0;
+                            v *= .02;
+
+                            app.g.fill(v, v, 1 - v, .2);
+                            app.g.ellipse(i * 5 + Math.random() * 3, j * 5 + Math.random() * 3, 4, 4);
+                        }
+                    }
+                }
+
+                for (var i = 0; i < 160 * 120; i++) {
+
+                    data[i * 4] = srcData[i * 2];
+                    data[i * 4 + 1] = srcData[i * 2 + 1];
+                    data[i * 4 + 2] = 255;
+                    data[i * 4 + 3] = 255;
+
+                }
+                ctx.putImageData(pix, 0, 0);
+
+            }
+
+            function loaded() {
+
+                // view-source:http://motionos.com/webgl/
+                var codexStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+                var codexInt = [];
+
+                for (var i = 0; i < 256; i++) {
+                    var idx = codexStr.indexOf(String.fromCharCode(i));
+                    codexInt[i] = idx;
+                }
+                var Base64 = {
+                    // assuming that the input string encodes a number of bytes divisible by 3
+                    decode : function(input) {
+                        var output = new Array(input.length * 3 / 4);
+                        var inLength = input.length;
+                        var outIndex = 0;
+                        for (var i = 0; i < inLength; i += 4) {
+                            var enc1 = codexInt[input.charCodeAt(i)];
+                            var enc2 = codexInt[input.charCodeAt(i + 1)];
+                            var enc3 = codexInt[input.charCodeAt(i + 2)];
+                            var enc4 = codexInt[input.charCodeAt(i + 3)];
+
+                            var chr1 = (enc1 << 2) | (enc2 >> 4);
+                            var chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                            var chr3 = ((enc3 & 3) << 6) | enc4;
+
+                            output[outIndex] = chr1;
+                            output[outIndex + 1] = chr2;
+                            output[outIndex + 2] = chr3;
+                            outIndex += 3;
+                        }
+
+                        return output;
+                    }
+                };
+
+                zig.embed();
+                var plugin = zig.findZigObject();
+                plugin.requestStreams({
+                    updateImage : true,
+                    updateDepth : true,
+                });
+
+                var canvas = document.getElementById('canvas');
+                // tell the plugin to update the RGB image
+                plugin.addEventListener("NewFrame", function() {// triggered every new kinect frame
+                    var rgbImage = Base64.decode(plugin.imageMap);
+                    // plugin.imageMapResolution stores the resolution, right now hard-coded
+                    // to QQVGA (160x120 for CPU-usage reasons)
+                    // do stuff with the image
+                    drawDM(plugin, canvas);
+
+                });
+
+            }
+
+
+            document.addEventListener('DOMContentLoaded', loaded, false);
+		</script>
+
+		<script data-main="js/main" src="js/vendor/require.js"></script>
+	</body>
+</html>

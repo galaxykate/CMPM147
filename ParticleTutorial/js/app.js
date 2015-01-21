@@ -20,11 +20,21 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         }
     };
 
+    function sound() {
+        console.log("sound");
+        var audio = new Audio('sound/lectroperc.aif');
+        audio.play();
+
+    }
+
     function randomDot(g) {
         var x = Math.floor(Math.random() * g.width);
         var y = Math.floor(Math.random() * g.height);
-        g.fill(Math.random(), 1, 1, .4);
+        var hue = Math.random();
+        g.fill(hue, 1, 1, .4);
         g.noStroke();
+        g.stroke(hue, 1, .0, .1);
+        g.strokeWeight(5);
         g.ellipse(x, y, 100, 100);
     }
 
@@ -46,6 +56,45 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         g.updatePixels();
     }
 
+    function recolorBlock(g) {
+        var offset = Math.floor(Math.random() * 100);
+        g.loadPixels();
+        var pixelArray = g.pixels.toArray();
+
+        var x = Math.floor(Math.random() * g.width);
+        var y = Math.floor(Math.random() * g.height);
+        var w = 650;
+        var h = 230;
+
+        // Iterate through all the pixels of a w by h rectangle, starting at (x, y)
+        for (var i = 0; i < w; i++) {
+            for (var j = 0; j < h; j++) {
+                // Convert the x, y coordinates into the position in the 1 dimensional array of the buffer
+                var index = (x + i + Math.round(.1*j*j)) + (y + j) * g.width;
+
+                // Read the hue saturation and brightness of the color at this pixel
+                var color = pixelArray[index];
+                var hue = g.hue(color);
+                var saturation = g.saturation(color);
+                var brightness = g.brightness(color);
+                hue = (hue + .2) % 1;
+                // and use it to make a new color
+                pixelArray[index] = g.color(hue, saturation, brightness*2 - 1);
+            }
+        }
+
+        g.pixels.set(pixelArray);
+        g.updatePixels();
+    }
+
+    function addParticles() {
+        console.log("add particles");
+        app.particles = [];
+        for (var i = 0; i < 30; i++) {
+            app.particles[i] = new Particle();
+        }
+    };
+
     // Lets add some functions to the app object!
     $.extend(app, {
 
@@ -55,19 +104,12 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
         init : function() {
             console.log("Hello, World.");
 
-            // Make a particle system (for later in the tutorial)
-            var particleSystem = new ParticleSystem();
-
-            for (var i = 0; i < 10; i++) {
-                particleSystem.add(new Particle());
-            }
-
             // Get the canvas element
             // Note that this is the jquery selector, and not the DOM element (which we need)
             // myJQuerySelector.get(0) will return the canvas element to pass to processing
             var canvas = $("#processingCanvas");
             var processingInstance = new Processing(canvas.get(0), function(g) {
-
+                app.particles = [];
                 // This function is called once processing is initialized.
 
                 // Set the size of processing so that it matches that size of the canvas element
@@ -101,36 +143,51 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
 
                 // [TODO] Create a particle here
 
-                for (var i = 0; i < 50; i++) {
+                var myParticle = new Particle();
+                for (var i = 0; i < 23; i++) {
                     randomDot(g);
                 }
+
+                for (var i = 0; i < 1; i++) {
+                    recolorBlock(g);
+                }
+
                 g.draw = function() {
 
                     // Update time
                     time.updateTime();
 
                     // [TODO] Update a particle here
+                    //  myParticle.update(time);
 
-                    g.fill(.5, .2, .1, .01);
-                    //   g.rect(0, 0, w, h);
+                    for (var i = 0; i < app.particles.length; i++) {
+                        app.particles[i].update(time);
+                    }
+
+                    g.fill(.5, .2, .1, .1);
+                    // g.rect(0, 0, w, h);
 
                     // Move to the center of the canvas
                     g.pushMatrix();
                     g.translate(w / 2, h / 2);
 
                     // [TODO] Draw a particle here
+                    //     myParticle.draw(g);
+
+                    for (var i = 0; i < app.particles.length; i++) {
+                        app.particles[i].draw(g);
+                    }
 
                     g.popMatrix();
 
                     // HW Functions
-                    /*
-                     if (app.key === 1) {
-                     randomDot(g);
-                     }
-                     if (app.key === 2) {
-                     pixelStreak(g);
-                     }
-                     */
+
+                    if (app.key === 1) {
+                        randomDot(g);
+                    }
+                    if (app.key === 2) {
+                        pixelStreak(g);
+                    }
 
                 };
             });
@@ -173,7 +230,13 @@ define(["processing", "./particles/particleSystem", "./particles/flower", "./par
                         break;
                     case '1':
                         // Do something when the user
+                        sound();
                         app.key = 1;
+                        break;
+
+                    case 'W':
+                        // Do something when the user
+                        addParticles();
                         break;
 
                     case '2':
