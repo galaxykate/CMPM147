@@ -1,7 +1,7 @@
 var app = {};
 
 // A holder for lots of app-related functionality
-define(["processing", "./drawing", "./threeUtils/threeScene", "common", "./particles/particle"], function(_processing, drawing, ThreeScene, common, Particle) {'use strict';
+define(["processing", "./drawing", "./threeUtils/threeScene", "common", "./particles/particle", "./grids/grid"], function(_processing, drawing, ThreeScene, common, Particle, Grid) {'use strict';
 
     // A little time object to keep track of the current time,
     //   how long its been since the last frame we drew,
@@ -32,8 +32,8 @@ define(["processing", "./drawing", "./threeUtils/threeScene", "common", "./parti
             app.is3D = true;
             console.log("Hello, World.");
             app.toggle3D();
-            app.threeScene = new ThreeScene($("#threeview"));
-         
+            //  app.threeScene = new ThreeScene($("#threeview"));
+
             // Get the canvas element
             // Note that this is the jquery selector, and not the DOM element (which we need)
             // myJQuerySelector.get(0) will return the canvas element to pass to processing
@@ -43,12 +43,16 @@ define(["processing", "./drawing", "./threeUtils/threeScene", "common", "./parti
 
             var processingInstance = new Processing(canvas.get(0), function(g) {
                 app.particles = [];
+
                 // Create particles
                 for (var i = 0; i < 0; i++) {
                     var p = new Particle();
                     app.particles.push(p);
                 }
-                // This function is called once processing is initialized.
+
+                // Create a grid
+                app.grid = new Grid(20, 12);
+                app.voronoi = new Grid.Voronoi();
 
                 // Set the size of processing so that it matches that size of the canvas element
                 var w = canvas.width();
@@ -67,25 +71,31 @@ define(["processing", "./drawing", "./threeUtils/threeScene", "common", "./parti
                 g.ellipseMode(g.CENTER_RADIUS);
 
                 // Draw ONE-TIME things
-               drawing.drawGrid(g);
-              
-               drawing.setTerrainToHeight();
- 
+
                 g.draw = function() {
+                    g.background(.65, .3, .8);
 
                     // Update time
                     app.time.updateTime();
-                   // drawing.drawGrid(g);
+
                     for (var i = 0; i < app.particles.length; i++) {
                         app.particles[i].update(app.time);
+
                     }
+
+                    if (app.time.frames % 10 === 0) {
+                        //    app.grid.update();
+
+                    }
+                    app.voronoi.draw(g);
+                    // app.grid.draw(g);
 
                     // Move to the center of the canvas
                     g.pushMatrix();
                     g.translate(w / 2, h / 2);
 
                     for (var i = 0; i < app.particles.length; i++) {
-                      app.particles[i].draw(g);
+                        app.particles[i].draw(g);
                     }
                     g.popMatrix();
 

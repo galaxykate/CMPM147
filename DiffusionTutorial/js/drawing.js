@@ -6,8 +6,6 @@ define(["./particles/particle", "common"], function(Particle, common) {'use stri
     function heightToColor(z) {
 
         var color = new common.KColor(.7 + .4 * Math.sin(3 * z), .5 +  Math.sin(8 * z), .8);
-      
-      // Sin function gives it stripes!
         color.shade(-.3 + .5 * Math.sin(z * 50) + .4 * z);
         return color;
     };
@@ -43,7 +41,7 @@ define(["./particles/particle", "common"], function(Particle, common) {'use stri
 
             console.log(w + " " + h);
 
-            var spacing = 1;
+            var spacing = 50;
             var rows = Math.round(h / spacing) + 1;
             var columns = Math.round(w / spacing) + 1;
 
