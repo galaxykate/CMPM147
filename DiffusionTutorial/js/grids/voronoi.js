@@ -47,7 +47,7 @@ define(["three", "common", "rhill-voronoi"], function(_three, common, _voronoi) 
             // TODO Spawn points in an interesting way
             for (var i = 0; i < 100; i++) {
                 //  this.regions[i] = new Region(Math.random() * 700 + 50, Math.random() * 500 + 50);
-                this.regions[i] = new Region(370 + 400 *utilities.noise(i*.02), 6 * i, 0);
+                this.regions[i] = new Region(370 + 400 *utilities.noise(i*.02), 270 + 200 *utilities.noise(30 + i*.02), 0);
             }
 
             var voronoi = new Voronoi();
@@ -63,7 +63,7 @@ define(["three", "common", "rhill-voronoi"], function(_three, common, _voronoi) 
                 yb : 600
             };
             var diagram = voronoi.compute(this.regions, bbox);
-
+console.log(diagram);
             // Parse the diagram
             diagram.cells.forEach(function(cell) {
                 var region = cell.site;
