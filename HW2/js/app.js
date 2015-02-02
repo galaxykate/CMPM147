@@ -62,7 +62,7 @@ define(["processing", "./threeUtils/threeScene", "common", "./particles/particle
                 var w = canvas.width();
                 var h = canvas.height();
                 app.dimensions.setTo(w, h);
-                app.startMode(0);
+                app.startMode(3);
 
                 g.size(w, h);
 

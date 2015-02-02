@@ -122,7 +122,7 @@ define(["common", "./grids/grid"], function(common, Grid) {'use strict';
 
     //======================================================
     var GameOfLife = Grid.extend({
-           cellSize : 20,
+        cellSize : 20,
 
         // Create a starting value for the x y cell
         // This could be an integer, floating point value, or an object
@@ -145,7 +145,7 @@ define(["common", "./grids/grid"], function(common, Grid) {'use strict';
 
             return utilities.lerp((v0 + v1 + v2 + v3) / 4, v, .1);
         },
-        
+
         // Custom drawing
         drawCell : function(g, value, x, y, width, height) {
             g.fill(.2, 1, value);
@@ -179,7 +179,7 @@ define(["common", "./grids/grid"], function(common, Grid) {'use strict';
 
             return utilities.lerp((v0 + v1 + v2 + v3) / 4, v, .1);
         },
-        
+
         // Custom drawing
         drawCell : function(g, value, x, y, width, height) {
             g.fill(.9, 1, value);
@@ -194,10 +194,13 @@ define(["common", "./grids/grid"], function(common, Grid) {'use strict';
 
             // TODO Spawn points in an interesting way, and set a color for each region
 
-            for (var i = 0; i < 30; i++) {
+            var colorStart = Math.random();
+            for (var i = 0; i < 130; i++) {
 
-                var color = new common.KColor((i * .023) % 1, .5 + .5 * utilities.noise(i * .02 + 5), 1);
-                var center = new Vector(utilities.noise(i * .06) * 400 + 400, 300 * utilities.noise(.06 * i + 30) + 300);
+                var pastel = .5 + .8 * utilities.noise(i * .2 + 5);
+                var hue = (colorStart + .4*utilities.noise(i * .007 + 15) + 10) % 1;
+                var color = new common.KColor(hue, 1.2 - 1.5*pastel, 1.2 - 1.2*pastel);
+                var center = new Vector(utilities.noise(i * .03) * 700 + 700, 300 * utilities.noise(.03 * i + 30) + 300);
 
                 this.regions[i] = new Grid.Voronoi.Region(center, color);
             }

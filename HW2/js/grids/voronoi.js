@@ -23,9 +23,9 @@ define(["three", "common", "rhill-voronoi"], function(_three, common, _voronoi) 
 
             var bbox = {
                 xl : 0,
-                xr : 800,
+                xr : 1500,
                 yt : 0,
-                yb : 600
+                yb : 800
             };
 
             var diagram = voronoi.compute(this.regions, bbox);
@@ -51,11 +51,12 @@ define(["three", "common", "rhill-voronoi"], function(_three, common, _voronoi) 
 
             // TODO Spawn points in an interesting way, and set a color for each region
 
+            var colorStart = Math.random();
             for (var i = 0; i < 120; i++) {
 
                 var color = new common.KColor((i * .023) % 1, .5 + .5 * utilities.noise(i * .02 + 5), 1);
-                var center = new Vector(utilities.noise(i * .02) * 400 + 400, 300 * utilities.noise(.02 * i + 30) + 300);
-              
+                var center = new Vector(utilities.noise(i * .02) * 600 + 400, 600 * utilities.noise(.02 * i + 30) + 400);
+
                 this.regions[i] = new Region(center, color);
             }
 
@@ -329,7 +330,7 @@ define(["three", "common", "rhill-voronoi"], function(_three, common, _voronoi) 
         }
     });
 
-VoronoiGrid.Region = Region;
+    VoronoiGrid.Region = Region;
     return VoronoiGrid;
 
 });

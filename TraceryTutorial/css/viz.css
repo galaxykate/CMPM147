@@ -1,0 +1,37 @@
+
+.nodeHolder {
+	border-radius:5px;
+	display:inline-block;
+	padding:5px;
+	border:solid 2px rgba(200, 200, 200, .2);
+	color:white;
+	background-color:rgba(20, 20, 20, .4);
+	box-shadow:2px 2px 5px rgba(20, 20, 20, .4);
+	pointer-events:all;
+}
+.nodeHolder:hover {
+	box-shadow:0px 0px 8px rgba(220, 100, 220, .4);
+}
+.nodeHolder.leaf {
+	color:rgba(60,  160, 160, .9);
+	background-color:rgba(60,  60, 60, .4);
+	border:none;
+	pointer-events:none;
+}
+.nodeHolder.pushAction {
+	background-color:rgba(190, 20, 160, .4);
+	color:rgba(190, 20, 160, .9);
+	opacity:.8;
+}
+.nodeHolder.popAction {
+	background-color:rgba(30, 220, 160, .4);
+	color:rgba(30, 220, 160, .9);
+	opacity:.8;
+}
+.modifierHolder {
+	font-size:80%;
+	width:90%;
+	color:rgba(255, 255, 255, .4);
+}
+.childHolder {
+}
