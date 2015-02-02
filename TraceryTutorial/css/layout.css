@@ -29,7 +29,6 @@
 	width: 800px;
 	height: 600px;
 	margin: 20px auto;
-	
 }
 #view {
 	z-index: 20;
@@ -40,19 +39,12 @@
 	height: 600px;
 }
 
-
-
 #storyHolder {
 
 	z-index: 20;
 	top: 0px;
 	left: 0px;
-	position: absolute;
-	width: 800px;
-	height: 600px;
 }
-
-
 
 #buttons {
 	z-index: 30;

@@ -3,18 +3,13 @@
  */
 var tracery = {};
 
-define(["common", "./utilities", "./grammar", "./nightvale", "./custom"], function(common, traceryUtilities, Grammar, nightvale, customGrammar) {'use strict';
-
-    var grammars = {
-        nightvale : nightvale,
-        customGrammar : customGrammar,
-    };
+define(["common", "./utilities", "./grammar"], function(common, traceryUtilities, Grammar) {'use strict';
 
     $.extend(tracery, traceryUtilities);
 
-    tracery.createGrammar = function(name) {
+    tracery.createGrammar = function(json) {
         var grammar = new Grammar();
-        grammar.loadFromJSON(grammars[name]);
+        grammar.loadFromJSON(json);
         return grammar;
     };
 });

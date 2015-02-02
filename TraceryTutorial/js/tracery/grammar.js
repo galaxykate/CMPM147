@@ -66,12 +66,12 @@ define(["./modifiers", "./node"], function(universalModifiers, Node) {'use stric
     };
 
     Symbol.prototype.pushRules = function(rawRules) {
-        console.log("Push rules: ", rawRules);
+       
         this.level++;
         this.overrides[this.level] = [];
         addRawToArray(this.overrides[this.level], rawRules);
         this.getRuleSet();
-        console.log(this);
+      
     };
 
     Symbol.prototype.getRule = function() {

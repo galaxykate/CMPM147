@@ -58,12 +58,23 @@ define([], function() {'use strict';
                 this.labelText = this.content;
 
                 this.rule = this.grammar.getRule(this.symbol).raw;
+                if (!this.rule)
+                    throw ("Can't find a rule for symbol '" + this.symbol + "'");
                 this.parsed = tracery.parse(this.rule);
                 this.labelText = this.symbol;
                 this.expandChildren();
 
                 this.compileFinalText();
-                this.finalText = this.childText;
+
+                var text = this.childText;
+                if (this.modifiers !== undefined) {
+                    for (var i = 0; i < this.modifiers.length; i++) {
+                        text = this.grammar.applyMod(this.modifiers[i], text);
+                        console.log(this.modifiers[i] + "=>" + text);
+                    }
+                }
+
+                this.finalText = text;
                 break;
 
             // action
@@ -81,7 +92,6 @@ define([], function() {'use strict';
                         this.expandChildren();
 
                         this.compileFinalText();
-                        console.log(this.childText);
 
                         target.pushRules([this.childText]);
                         this.labelText = this.target + "=" + this.childText;
@@ -91,6 +101,8 @@ define([], function() {'use strict';
                     case "POP":
                         break;
                 }
+
+                this.finalText = "";
                 break;
 
             default:
@@ -98,6 +110,8 @@ define([], function() {'use strict';
                 console.log(spacer(this.depth) + "START TREE");
                 this.parsed = tracery.parse(this.raw);
                 this.expandChildren();
+                this.compileFinalText();
+                this.finalText = this.childText;
                 break;
         };
 
@@ -136,7 +150,7 @@ define([], function() {'use strict';
         }
 
         for (var i = 0; i < this.children.length; i++) {
-            this.children[i].compileFinalText();
+            //    this.children[i].compileFinalText();
             this.childText += this.children[i].finalText;
         }
 

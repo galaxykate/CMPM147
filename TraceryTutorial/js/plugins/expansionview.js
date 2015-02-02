@@ -5,6 +5,8 @@ define(["vis"], function(vis) {'use strict';
 
     var NodeDiv = Class.extend({
         init : function(node, holder) {
+            
+
             if (node.isLeaf) {
                 this.div = $("<div/>", {
                     class : "leaf nodeHolder",

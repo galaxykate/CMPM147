@@ -2,8 +2,11 @@
 
 	box-shadow: 0px 7px 28px rgba(0, 0, 0, .7), inset 5px 5px 130px rgba(30, 10,0, .4);
 	background-image: url("images/paper.jpeg");
+	overflow-y: scroll;
 }
 
 #storyHolder {
-
+	padding: 15px;
+	
+	font-family: 'Slabo 27px', serif;
 }
